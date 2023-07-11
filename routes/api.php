@@ -51,6 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('products')->group(function () {
         Route::post('/', [ProductController::class, 'store'])->name('api-products.store');
+        Route::get('/', [ProductController::class, 'index'])->name('api-products.index');
+
     });
 });
 

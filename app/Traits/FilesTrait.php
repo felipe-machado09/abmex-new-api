@@ -8,6 +8,7 @@ use App\Models\FileStorage;
 
 use App\Enums\DocumentTypeEnum;
 use App\Enums\DocumentStatusEnum;
+use App\Models\FileStorageProduct;
 use Illuminate\Support\Facades\Storage;
 use BenSampo\Enum\Enum;
 
@@ -66,6 +67,15 @@ trait FilesTrait
         return $fileStorage;
     }
 
+    public function FileStorageProduct($product_id, $file_storage_id)
+    {
+        $file_storage_product = FileStorageProduct::create([
+            'product_id' => $product_id,
+            'file_storage_id' => $file_storage_id
+        ]);
+
+        return $file_storage_product;
+    }
 
     public function assignFileToUser(FileStorage $file, User $user, DocumentTypeEnum $type) : ?User 
     {
@@ -79,8 +89,6 @@ trait FilesTrait
         }
         return null;     
     }
-
-    
 
     public function convertImgToBase64($file)
     {

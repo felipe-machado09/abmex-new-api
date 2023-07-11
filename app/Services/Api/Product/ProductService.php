@@ -16,9 +16,39 @@ class ProductService
         return Product::query()->paginate();
     }
 
+    public function index(array $filter)
+    {
+        $product = Product::query();
+
+        if(empty($filter)) {
+            return $product->orderBy('name', 'asc')->get();
+        }
+
+        if (isset($filter['status'])) {
+            $product->where('status', $filter['status']);
+        }
+
+        if (isset($filter['name'])) {
+            $product->where('name', 'like', '%' . $filter['name'] . '%');
+        }
+
+
+        if (isset($filter['category_id'])) {
+            $product->where('category_id', $filter['category_id']);
+        }
+
+        return $product->orderBy('name', 'asc')->get();
+    }
+
     public function store(StoreProductRequest $request): Product|Model
     {
-        return Product::create($request->validated());
+        $product = Product::create($request->validated());
+
+        if ($request->hasFile('image') && $product) {
+            $this->storeFileStorageProduct($request['image'], $product->id);
+        }
+
+        return $product;
     }
 
     public function show(Product $product): Product
@@ -35,5 +65,12 @@ class ProductService
     public function destroy(Product $product): bool
     {
         return $product->delete();
+    }
+
+    public function storeFileStorageProduct($data, $product_id)
+    {
+        $img = $this->storeFile($data);
+        $file_storage = $this->FileStorageProduct($product_id, $img->id);
+        return $file_storage;
     }
 }
