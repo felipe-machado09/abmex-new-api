@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\product\ProductRequest;
+use App\Http\Requests\product\UpdateProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\Api\Product\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
@@ -30,5 +33,19 @@ class ProductController extends Controller
             $this->productService->index($request->validated())
         );
 
+    }
+
+    public function update(UpdateProductRequest $request, Product $product)
+    {
+        return new ProductResource(
+            $this->productService->update($request->validated(), $product)
+        );
+    }
+
+    public function destroy(Product $product): JsonResponse
+    {
+        $this->productService->destroy($product);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Api\Product;
 
+use App\Http\Requests\product\UpdateProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Traits\FilesTrait;
@@ -56,9 +57,9 @@ class ProductService
         return $product;
     }
 
-    public function update(StoreProductRequest $request, Product $product): Product|Model
-    {
-        $product->update($request->validated());
+    public function update(array $data, Product $product): Product|Model
+    {     
+        $product->update($data);
         return $product;
     }
 
