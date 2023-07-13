@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Enums\ProductStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 
 /**
  * @property int id
@@ -19,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Product extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
     
     protected $fillable = [
@@ -49,5 +55,13 @@ class Product extends Model
             $this->attributes['available_sell'] = false;
         }
 
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return ProductFactory::new();
     }
 }
