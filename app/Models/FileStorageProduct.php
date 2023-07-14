@@ -27,5 +27,5 @@ class FileStorageProduct extends Model
     {
         return $this->belongsTo(FileStorage::class);
     }
-
+    
 }

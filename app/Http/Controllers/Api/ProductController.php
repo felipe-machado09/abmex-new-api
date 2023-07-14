@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\product\ProductRequest;
-use App\Http\Requests\Product\StoreProductRequest;
-use App\Http\Requests\product\UpdateProductRequest;
-use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use App\Services\Api\Product\ProductService;
+
+use Illuminate\Http\Response;
+
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
+use App\Services\Api\Product\ProductService;
+use App\Http\Requests\Product\ProductRequest;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
@@ -20,12 +22,12 @@ class ProductController extends Controller
     ) {
     }
 
+
     public function index(ProductRequest $request): AnonymousResourceCollection
     {
         return ProductResource::collection(
-            $this->productService->index($request->validated())
+            $this->productService->index($request)
         );
-
     }
 
     public function store(StoreProductRequest $request): ProductResource

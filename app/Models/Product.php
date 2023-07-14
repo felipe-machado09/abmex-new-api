@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Models\FileStorage;
 use App\Enums\ProductStatusEnum;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Database\Factories\ProductFactory;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @property int id
@@ -25,7 +25,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];  
+    protected $guarded = [];
     protected $fillable = [
         'user_id',
         'category_id',
@@ -48,10 +48,7 @@ class Product extends Model
     public function setStatusAttribute($value)
     {
         $this->attributes['status'] = $value;
-
-        if (in_array(
-            $value,
-            [
+        if (in_array($value,[
             ProductStatusEnum::INACTIVE->value,
             ProductStatusEnum::BLOCKED->value,
             ProductStatusEnum::SKETCH->value]

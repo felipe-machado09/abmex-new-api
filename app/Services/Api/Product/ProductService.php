@@ -48,9 +48,6 @@ class ProductService
 
     public function store(StoreProductRequest $request): Product|Model
     {
-        $product = Product::create($request->validated());
-
-
         $data = $request->validated();
         $product = Product::create($request->validated());
         $disk = 's3-product-public';
@@ -68,7 +65,6 @@ class ProductService
         $product->load('images');
 
         return $product;
-
     }
 
     public function show(Product $product): Product
@@ -78,7 +74,7 @@ class ProductService
 
     public function update(UpdateProductRequest $request, Product $product): Product|Model
     {
-        $product->update( $request->validated());
+        $product->update($request->validated());
         return $product;
     }
 
@@ -86,11 +82,5 @@ class ProductService
     {
         return $product->delete();
     }
-
-    public function storeFileStorageProduct($data, $product_id)
-    {
-        $img = $this->storeFile($data);
-        $file_storage = $this->FileStorageProduct($product_id, $img->id);
-        return $file_storage;
-    }
 }
+
