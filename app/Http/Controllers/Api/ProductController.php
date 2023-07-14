@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\product\ProductRequest;
+use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\product\UpdateProductRequest;
-use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\Api\Product\ProductService;
@@ -20,13 +20,6 @@ class ProductController extends Controller
     ) {
     }
 
-    public function store(StoreProductRequest $request): ProductResource
-    {
-        return new ProductResource(
-            $this->productService->store($request)
-        );
-    }
-
     public function index(ProductRequest $request): AnonymousResourceCollection
     {
         return ProductResource::collection(
@@ -35,10 +28,17 @@ class ProductController extends Controller
 
     }
 
+    public function store(StoreProductRequest $request): ProductResource
+    {
+        return new ProductResource(
+            $this->productService->store($request)
+        );
+    }
+
     public function update(UpdateProductRequest $request, Product $product)
     {
         return new ProductResource(
-            $this->productService->update($request->validated(), $product)
+            $this->productService->update($request, $product)
         );
     }
 

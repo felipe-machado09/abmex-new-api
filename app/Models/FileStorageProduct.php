@@ -2,18 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
+use App\Models\FileStorage;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FileStorageProduct extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'file_storage_id'];
+    protected $table = 'file_storage_products';
 
-    protected $searchableFields = ['*'];
+    protected $fillable = [
+        'file_id',
+        'product_id',
+    ];
 
-    protected $table = 'file_storage_product';
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 
-    public $timestamps = false;
+    public function file()
+    {
+        return $this->belongsTo(FileStorage::class);
+    }
+
 }

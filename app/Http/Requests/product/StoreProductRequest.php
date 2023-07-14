@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Product;
 
 use App\Models\Product;
 use Illuminate\Validation\Rule;
@@ -13,7 +13,6 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreProductRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return auth()->check();
@@ -27,7 +26,10 @@ class StoreProductRequest extends FormRequest
             'category_id' => ['nullable', Rule::exists('categories', 'id')],
             'description' => ['nullable', 'string', 'min:100','max:1000'],
             'available_sell' => ['nullable', 'boolean'],
-            'status' => ['required', 'string', new Enum(ProductStatusEnum::class)]
+            'status' => ['required', 'string', new Enum(ProductStatusEnum::class)],
+            'files' => ['nullable','array'],
+            'files.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ];
     }
 

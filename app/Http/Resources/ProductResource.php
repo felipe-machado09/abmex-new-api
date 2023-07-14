@@ -20,6 +20,7 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'status' => ProductStatusEnum::tryFrom($this->status),
             'available_sell' => $this->available_sell,
+            'images' => $this->whenLoaded('images'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 

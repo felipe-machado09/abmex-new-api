@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\FileStorage;
 use App\Enums\ProductStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 
 /**
  * @property int id
@@ -25,8 +25,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-    
+    protected $guarded = [];  
     protected $fillable = [
         'user_id',
         'category_id',
@@ -39,6 +38,11 @@ class Product extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function images()
+    {
+        return $this->belongsToMany(FileStorage::class, 'file_storage_products', 'product_id', 'file_id');
     }
 
     public function setStatusAttribute($value)

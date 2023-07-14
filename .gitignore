@@ -1,0 +1,12 @@
+*.swp
+*.DS_Store
+.env*
+vendor/
+node_modules/
+public/storage/*.key
+public/hot
+storage/*.key
+.phpunit.result.cache
+.idea
+.vscode
+.docker

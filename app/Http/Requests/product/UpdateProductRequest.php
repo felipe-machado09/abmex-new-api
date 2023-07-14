@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\product;
+namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -31,7 +31,9 @@ class UpdateProductRequest extends FormRequest
                     'category_id' => ['nullable', Rule::exists('categories', 'id')],
                     'description' => ['nullable', 'string', 'min:100','max:1000'],
                     'available_sell' => ['nullable', 'boolean'],
-                    'status' => ['required', 'string', new Enum(ProductStatusEnum::class)]
+                    'status' => ['required', 'string', new Enum(ProductStatusEnum::class)],
+                    'files' => ['nullable','array'],
+                    'files.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
 
     }

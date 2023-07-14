@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HealthCheckController;
-use App\Http\Controllers\Api\{ProductController, UserController, AssetController, CategoryController};
+use App\Http\Controllers\Api\{UserController, AssetController, CategoryController, ProductController};
 
 /*
 |--------------------------------------------------------------------------
