@@ -124,10 +124,10 @@ test('update product', function () {
     $response->assertOk();
     $response->assertJsonFragment($updatedProductData);
 
-        expect(Product::where('name', $updatedProductData['name'])
-        ->where('category_id', $updatedProductData['category_id'])
-        ->exists())
-        ->toBeTrue();
+    expect(Product::where('name', $updatedProductData['name'])
+    ->where('category_id', $updatedProductData['category_id'])
+    ->exists())
+    ->toBeTrue();
 
 });
 
@@ -142,5 +142,5 @@ test('destroy product', function () {
 
     $response->assertNoContent();
     expect(Product::find($product->id))->toBeNull();
-
+    
 });

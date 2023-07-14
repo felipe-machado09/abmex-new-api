@@ -32,7 +32,7 @@ class UpdateProductRequest extends FormRequest
                     'description' => ['nullable', 'string', 'min:100','max:1000'],
                     'available_sell' => ['nullable', 'boolean'],
                     'status' => ['required', 'string', new Enum(ProductStatusEnum::class)],
-                    'files' => ['nullable','array'],
+                    'files' => ['nullable','array'], 
                     'files.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
 
