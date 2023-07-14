@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HealthCheckController;
-use App\Http\Controllers\Api\{ProductController, UserController, AssetController, CategoryController};
+use App\Http\Controllers\Api\{UserController, AssetController, CategoryController};
 
 /*
 |--------------------------------------------------------------------------
@@ -49,9 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('categories', [CategoryController::class, 'index'])->name('api-categories.index');
 
-    Route::prefix('products')->group(function () {
-        Route::post('/', [ProductController::class, 'store'])->name('api-products.store');
-    });
+
 });
 
 Route::get('/health', HealthCheckController::class);
