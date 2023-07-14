@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Enums\ProductStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 
 /**
  * @property int id
@@ -19,7 +23,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Product extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
+    
+    protected $fillable = [
+        'user_id',
+        'category_id',
+        'name',
+        'description',
+        'status',
+        'available_sell'
+    ];
 
     public function user(): BelongsTo
     {
@@ -29,17 +44,24 @@ class Product extends Model
     public function setStatusAttribute($value)
     {
         $this->attributes['status'] = $value;
-        // dd($this->attributes['available_sell']);
-        dd(ProductStatusEnum::INACTIVE);
-        dd(in_array($value, [ProductStatusEnum::INACTIVE, ProductStatusEnum::BLOCKED, ProductStatusEnum::SKETCH]));
 
-        // Lógica para definir o status de venda com base no status do produto
-        if (in_array($value, [ProductStatusEnum::INACTIVE, ProductStatusEnum::BLOCKED, ProductStatusEnum::SKETCH])) {
+        if (in_array(
+            $value,
+            [
+            ProductStatusEnum::INACTIVE->value,
+            ProductStatusEnum::BLOCKED->value,
+            ProductStatusEnum::SKETCH->value]
+        )) {
             $this->attributes['available_sell'] = false;
-        } else {
-            $this->attributes['available_sell'] = true;
         }
 
-     
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return ProductFactory::new();
     }
 }

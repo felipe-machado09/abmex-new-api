@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [UserController::class, 'me']);
     Route::prefix('onboarding')->group(function () {
         Route::get('/', [UserController::class, 'onboarding']);
-        Route::middleware('edit.onboarding')->group(function() {
+        Route::middleware('edit.onboarding')->group(function () {
             Route::post('address', [UserController::class, 'onboardingAddress']);
             Route::post('bank', [UserController::class, 'onboardingBank']);
             Route::post('company', [UserController::class, 'onboardingCompany']);
@@ -51,6 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('products')->group(function () {
         Route::post('/', [ProductController::class, 'store'])->name('api-products.store');
+        Route::get('/', [ProductController::class, 'index'])->name('api-products.index');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('api-products.destroy');
+        Route::put('/{product}', [ProductController::class, 'update'])->name('api-products.update');
     });
 });
 
