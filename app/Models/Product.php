@@ -45,6 +45,11 @@ class Product extends Model
         return $this->belongsToMany(FileStorage::class, 'file_storage_products', 'product_id', 'file_id');
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
     public function setStatusAttribute($value)
     {
         $this->attributes['status'] = $value;

@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HealthCheckController;
-use App\Http\Controllers\Api\{UserController, AssetController, CategoryController, ProductController};
+use App\Http\Controllers\Api\{UserController, AssetController, CategoryController, OfferController, ProductController};
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +54,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('api-products.index');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('api-products.destroy');
         Route::put('/{product}', [ProductController::class, 'update'])->name('api-products.update');
+    });
+
+
+    Route::prefix('offers')->group(function () {
+        Route::post('/', [OfferController::class, 'store'])->name('api-offers.store');
+        Route::get('/', [OfferController::class, 'index'])->name('api-offers.index');
+        Route::delete('/{offer}', [OfferController::class, 'destroy'])->name('api-offers.destroy');
+        Route::put('/{offer}', [OfferController::class, 'update'])->name('api-offers.update');
     });
 });
 

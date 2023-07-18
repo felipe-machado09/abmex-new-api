@@ -11,6 +11,7 @@ use App\Http\Requests\Product\ProductRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Models\Offer;
 
 class ProductService
 {
@@ -52,6 +53,7 @@ class ProductService
         $product = Product::create($request->validated());
         $disk = 's3-product-public';
         $visibility = 'public';
+        
         if(Arr::has($data, 'files')) {
             if(count($data['files']) > 0) {
                 foreach ($data['files'] as $file) {
@@ -61,7 +63,14 @@ class ProductService
             }
         }
 
-
+        if($request->offers){
+            foreach($request->offers as $item)
+            {
+                $offer = new Offer($item);
+                $product->offers()->save($offer);
+            }         
+        }
+        
         $product->load('images');
 
         return $product;

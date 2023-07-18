@@ -16,4 +16,9 @@ class NextCodeLogs extends Model
         'response'
     ];
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }
