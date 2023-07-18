@@ -30,7 +30,12 @@ class StoreProductRequest extends FormRequest
             'status' => ['required', 'string', new Enum(ProductStatusEnum::class)],
             'files' => ['nullable','array'], 
             'files.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
-
+            
+            'offers' => ['nullable', 'array'],
+            'offers.*.name' => ['required', 'max:255', 'string'],
+            'offers.*.price' => ['required', 'numeric'],
+            'offers.*.recurrency_setup' => ['required', 'json'],
+            'offers.*.pages_setup' => ['required', 'json'],
         ];
     }
 
