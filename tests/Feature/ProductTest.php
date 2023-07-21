@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Offer;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,8 +30,8 @@ test('create product active', function () {
     $response->assertStatus(201);
 
     expect(Product::where('name', 'PRODUTO TESTE')
-    ->exists())
-    ->toBeTrue();
+        ->exists())
+        ->toBeTrue();
 });
 
 
@@ -52,9 +53,9 @@ test('create product inactive', function () {
     $response->assertStatus(201);
 
     expect(Product::where('name', 'PRODUTO TESTE')
-    ->where('available_sell', 0)
-    ->exists())
-    ->toBeTrue();
+        ->where('available_sell', 0)
+        ->exists())
+        ->toBeTrue();
 });
 
 
@@ -76,9 +77,9 @@ test('create product blocked', function () {
     $response->assertStatus(201);
 
     expect(Product::where('name', 'PRODUTO TESTE')
-    ->where('available_sell', 0)
-    ->exists())
-    ->toBeTrue();
+        ->where('available_sell', 0)
+        ->exists())
+        ->toBeTrue();
 });
 
 
@@ -100,9 +101,9 @@ test('create product sketch', function () {
     $response->assertStatus(201);
 
     expect(Product::where('name', 'PRODUTO TESTE')
-    ->where('available_sell', 0)
-    ->exists())
-    ->toBeTrue();
+        ->where('available_sell', 0)
+        ->exists())
+        ->toBeTrue();
 });
 
 
@@ -124,11 +125,10 @@ test('update product', function () {
     $response->assertOk();
     $response->assertJsonFragment($updatedProductData);
 
-        expect(Product::where('name', $updatedProductData['name'])
+    expect(Product::where('name', $updatedProductData['name'])
         ->where('category_id', $updatedProductData['category_id'])
         ->exists())
         ->toBeTrue();
-
 });
 
 
@@ -142,5 +142,47 @@ test('destroy product', function () {
 
     $response->assertNoContent();
     expect(Product::find($product->id))->toBeNull();
+});
 
+test('create a product and offers', function () {
+
+    $user = User::factory()->create();
+    $category = Category::factory()->create();
+    Sanctum::actingAs($user);
+
+    $productData = [
+        'name' => 'Product Test',
+        'user_id' => $user->id,
+        'category_id' => $category->id,
+        'available_sell' => true,
+        'status' => 'active',
+        'offers' => [
+            [
+                'name' => 'Offer 1',
+                'price' => 100,
+                'recurrency_setup' => json_encode(['option1' => 'value1']),
+                'pages_setup' => json_encode(['option2' => 'value2']),
+            ],
+            [
+                'name' => 'Offer 2',
+                'price' => 200,
+                'recurrency_setup' => json_encode(['option3' => 'value3']),
+                'pages_setup' => json_encode(['option4' => 'value4']),
+            ],
+        ],
+    ];
+
+    $response = $this->postJson(route('api-products.index'), $productData);
+
+    expect(Product::where('name', $productData['name'])
+        ->exists())
+        ->toBeTrue();
+
+    expect(Offer::where('name', $productData['offers'][0]['name'])
+    ->exists())
+    ->toBeTrue();
+
+    expect(Offer::where('name', $productData['offers'][1]['name'])
+    ->exists())
+    ->toBeTrue();
 });

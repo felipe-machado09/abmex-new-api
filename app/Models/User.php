@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
 use App\Enums\OnboardEnum;
-use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -29,7 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  */
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
@@ -68,6 +67,7 @@ class User extends Authenticatable implements FilamentUser
     protected $casts = [
         'email_verified_at' => 'datetime',
         'terms_accepted_at' => 'datetime',
+        'password' => 'hashed'
     ];
 
     public function address(): HasOne
@@ -90,16 +90,10 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Document::class);
     }
 
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class);
-    }
-
     public function nextCodeLog(): HasMany
     {
         return $this->hasMany(NextCodeLogs::class);
     }
-
     public function getFinishedOnboardingAttribute()
     {
         return $this->hasApprovedDocuments()->exists();
@@ -110,21 +104,18 @@ class User extends Authenticatable implements FilamentUser
         return $this->finishedOnboarding ? OnboardEnum::INDOOR : OnboardEnum::ONBOARD;
     }
 
+
     public function scopeHasApprovedDocuments(Builder $query): void
     {
         $query->whereHas('document', function ($query) {
             $query->whereIn('document_type', ['rg', 'cnh'])
                 ->statusApproved();
         });
-
+    
         $query->whereHas('document', function ($query) {
             $query->where('document_type', 'social_contract')
                 ->statusApproved();
         });
     }
 
-    public function canAccessFilament(): bool
-    {
-        return str_ends_with($this->email, '@abmex.com.br');
-    }
 }

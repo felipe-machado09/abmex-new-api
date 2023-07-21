@@ -11,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @mixin Product
  */
-class ProductRequest extends FormRequest
+class StoreProductRequest extends FormRequest
 {
 
     public function authorize(): bool
@@ -28,8 +28,14 @@ class ProductRequest extends FormRequest
             'description' => ['nullable', 'string', 'min:100','max:1000'],
             'available_sell' => ['nullable', 'boolean'],
             'status' => ['required', 'string', new Enum(ProductStatusEnum::class)],
-            'files' => 'array',
+            'files' => ['nullable','array'], 
             'files.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
+            
+            'offers' => ['nullable', 'array'],
+            'offers.*.name' => ['required', 'max:255', 'string'],
+            'offers.*.price' => ['required', 'numeric'],
+            'offers.*.recurrency_setup' => ['required', 'json'],
+            'offers.*.pages_setup' => ['required', 'json'],
         ];
     }
 
