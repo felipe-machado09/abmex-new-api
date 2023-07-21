@@ -32,11 +32,6 @@ class Offer extends Model
         'pages_setup',
     ];
 
-    protected $casts = [
-        'recurrency_setup' => 'array',
-        'pages_setup' => 'array',
-    ];
-
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

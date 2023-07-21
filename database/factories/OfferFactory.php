@@ -26,13 +26,14 @@ class OfferFactory extends Factory
      */
     public function definition(): array
     {
+        $product = Product::factory()->create();
 
         return [
             'name' => $this->faker->name(),
             'price' => $this->faker->randomFloat(2, 0, 9999),
-            'recurrency_setup' => [],
-            'pages_setup' => [],
-            'product_id' => Product::factory(),
+            'recurrency_setup' => fake()->randomElement(['none', 'weekly', 'monthly', 'quarterly', 'semiannually', 'annually', 'custom']),
+            'pages_setup' => $this->faker->text(),
+            'product_id' => $product->id,
         ];
     }
 }

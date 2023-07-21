@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum RecurrenceEnum: string
 {
-    const NONE = 'none';
-    const WEEKLY = 'weekly';
-    const MONTHLY = 'monthly';
-    const QUARTERLY = 'quarterly';
-    const SEMIANNUALLY = 'semiannually';
-    const ANNUALLY = 'annually';
-    const CUSTOM = 'custom';
+    case NONE = 'none';
+    case WEEKLY = 'weekly';
+    case MONTHLY = 'monthly';
+    case QUARTERLY = 'quarterly';
+    case SEMIANNUALLY = 'semiannually';
+    case ANNUALLY = 'annually';
+    case CUSTOM = 'custom';
 }

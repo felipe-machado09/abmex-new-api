@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RecurrenceEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +16,8 @@ return new class () extends Migration {
             $table->unsignedBigInteger('product_id');
             $table->string('name');
             $table->decimal('price');
-            $table->json('recurrency_setup');
-            $table->json('pages_setup');
+            $table->string('recurrency_setup')->default('none');
+            $table->string('pages_setup');
 
             $table->timestamps();
             $table->softDeletes();
