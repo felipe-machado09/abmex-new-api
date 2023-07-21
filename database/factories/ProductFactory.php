@@ -21,7 +21,7 @@ class ProductFactory extends Factory
     {
         $user = User::factory()->create();
         $category = Category::factory()->create();
-
+        
         return [
         'user_id' => $user->id,
         'category_id' =>  $category->id,

@@ -2,12 +2,16 @@
 
 namespace App\Services\Api\Product;
 
-use App\Http\Requests\product\UpdateProductRequest;
-use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Traits\FilesTrait;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use App\Http\Requests\Product\ProductRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
+use App\Models\Offer;
 
 class ProductService
 {
@@ -17,9 +21,12 @@ class ProductService
         return Product::query()->paginate();
     }
 
-    public function index(array $filter)
+    public function index(ProductRequest $request): Collection
     {
         $product = Product::query();
+        $filter = $request;
+        $product->with('images');
+        $product->where('user_id', auth()->user()->id);
 
         if(empty($filter)) {
             return $product->orderBy('name', 'asc')->get();
@@ -33,7 +40,6 @@ class ProductService
             $product->where('name', 'like', '%' . $filter['name'] . '%');
         }
 
-
         if (isset($filter['category_id'])) {
             $product->where('category_id', $filter['category_id']);
         }
@@ -43,11 +49,29 @@ class ProductService
 
     public function store(StoreProductRequest $request): Product|Model
     {
+        $data = $request->validated();
         $product = Product::create($request->validated());
-
-        if ($request->hasFile('image') && $product) {
-            $this->storeFileStorageProduct($request['image'], $product->id);
+        $disk = 's3-product-public';
+        $visibility = 'public';
+        
+        if(Arr::has($data, 'files')) {
+            if(count($data['files']) > 0) {
+                foreach ($data['files'] as $file) {
+                    $img = $this->storeFile($file, $disk, $visibility);
+                    $this->assignFileToProduct($product->id, $img->id);
+                }
+            }
         }
+
+        if($request->offers){
+            foreach($request->offers as $item)
+            {
+                $offer = new Offer($item);
+                $product->offers()->save($offer);
+            }         
+        }
+        
+        $product->load('images');
 
         return $product;
     }
@@ -57,9 +81,9 @@ class ProductService
         return $product;
     }
 
-    public function update(array $data, Product $product): Product|Model
-    {     
-        $product->update($data);
+    public function update(UpdateProductRequest $request, Product $product): Product|Model
+    {
+        $product->update($request->validated());
         return $product;
     }
 
@@ -67,11 +91,5 @@ class ProductService
     {
         return $product->delete();
     }
-
-    public function storeFileStorageProduct($data, $product_id)
-    {
-        $img = $this->storeFile($data);
-        $file_storage = $this->FileStorageProduct($product_id, $img->id);
-        return $file_storage;
-    }
 }
+

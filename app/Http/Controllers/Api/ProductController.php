@@ -2,22 +2,32 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\product\ProductRequest;
-use App\Http\Requests\product\UpdateProductRequest;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use App\Services\Api\Product\ProductService;
+
+use Illuminate\Http\Response;
+
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
+use App\Services\Api\Product\ProductService;
+use App\Http\Requests\Product\ProductRequest;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
     public function __construct(
         private readonly ProductService $productService
     ) {
+    }
+
+
+    public function index(ProductRequest $request): AnonymousResourceCollection
+    {
+        return ProductResource::collection(
+            $this->productService->index($request)
+        );
     }
 
     public function store(StoreProductRequest $request): ProductResource
@@ -27,18 +37,10 @@ class ProductController extends Controller
         );
     }
 
-    public function index(ProductRequest $request): AnonymousResourceCollection
-    {
-        return ProductResource::collection(
-            $this->productService->index($request->validated())
-        );
-
-    }
-
     public function update(UpdateProductRequest $request, Product $product)
     {
         return new ProductResource(
-            $this->productService->update($request->validated(), $product)
+            $this->productService->update($request, $product)
         );
     }
 
