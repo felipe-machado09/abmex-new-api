@@ -32,13 +32,15 @@ test('create a offer', function () {
     Sanctum::actingAs($user);
 
     $product = Product::factory()->create();
-
+    $recurrency = ['none', 'weekly', 'monthly', 'quarterly', 'semiannually', 'annually', 'custom'];
+    $key = array_rand($recurrency);
+    
     $offerData = [
         'product_id' => $product->id,
         'name' => 'Product Test',
         'price' => 100.00,
-        'recurrency_setup' => json_encode(['option1' => 'value1']),
-        'pages_setup' => json_encode(['option2' => 'value2']),
+        'recurrency_setup' => $recurrency[$key],
+        'pages_setup' => 'Lorem Ipsum comes from sections',
     ];
 
     $response = $this->postJson(route('api-offers.store'), $offerData);
@@ -56,13 +58,15 @@ test('update a offer', function () {
 
     $product = Product::factory()->create();
     $offer = Offer::factory()->create();
+    $recurrency = ['none', 'weekly', 'monthly', 'quarterly', 'semiannually', 'annually', 'custom'];
+    $key = array_rand($recurrency);
 
     $updatedData = [
         'name' => 'Updated Product',
         'product_id' => $product->id,
         'price' => 150.00,
-        'recurrency_setup' => json_encode(['option1' => 'value1']),
-        'pages_setup' => json_encode(['option2' => 'value2']),
+        'recurrency_setup' => $recurrency[$key],
+        'pages_setup' => 'Lorem Ipsum comes from sections',
     ];
 
     $response = $this->putJson(route('api-offers.update', $offer->id), $updatedData);
@@ -79,10 +83,9 @@ test('delete a offer', function () {
     Sanctum::actingAs($user);
 
     $offer = Offer::factory()->create();
-
-    $response = $this->deleteJson(route('api-offers.destroy', $offer->id));
+    $response = $this->deleteJson(route('api-offers.destroy', $offer->id));  
 
     $response->assertNoContent();
 
-    expect(Product::find($offer->id))->toBeNull();
+    expect(Offer::find($offer->id))->toBeNull();
 });

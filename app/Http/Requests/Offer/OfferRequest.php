@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Offer;
 
+use App\Enums\RecurrenceEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class OfferRequest extends FormRequest
 {
@@ -26,8 +28,8 @@ class OfferRequest extends FormRequest
             'product_id' => ['nullable', 'exists:products,id'],
             'name' => ['nullable', 'max:255', 'string'],
             'price' => ['nullable', 'numeric'],
-            'recurrency_setup' => ['nullable', 'json'],
-            'pages_setup' => ['nullable', 'json'],
+            'recurrency_setup' =>  ['nullable', 'string', new Enum (RecurrenceEnum::class)],
+            'pages_setup' => ['nullable', 'string'],
         ];
     }
 }
